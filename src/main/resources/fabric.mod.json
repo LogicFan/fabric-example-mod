@@ -23,7 +23,8 @@
     ]
   },
   "mixins": [
-      "modid.mixins.json"
+    "m1.mixins.json",
+    "m0.mixins.json"
   ],
 
   "depends": {
