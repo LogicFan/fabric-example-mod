@@ -1,6 +1,7 @@
 plugins {
-	id("fabric-loom") version "0.8-SNAPSHOT"
+	id("fabric-loom") version "0.9.local"
 	id("maven-publish")
+	id("com.github.johnrengelman.shadow") version "7.0.0"
 }
 
 val sourceCompatibility = JavaVersion.VERSION_16
@@ -21,6 +22,11 @@ repositories {
 	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
 	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
 	// for more information about repositories.
+}
+
+val mixin by sourceSets.registering {
+	this.compileClasspath += sourceSets.main.get().compileClasspath
+	this.runtimeClasspath += sourceSets.main.get().runtimeClasspath
 }
 
 dependencies {
@@ -61,6 +67,21 @@ tasks {
 		from("LICENSE") {
 			rename { "${it}_${archives_base_name}"}
 		}
+	}
+
+	shadowJar {
+		archiveClassifier.set("universal-dev")
+
+		configurations = listOf()
+
+		from(sourceSets.main.map { it.output })
+		from(mixin.map { it.output})
+	}
+
+	remapJar {
+		dependsOn(shadowJar)
+		archiveClassifier.set("universal")
+		input.fileValue(shadowJar.get().outputs.files.singleFile)
 	}
 }
 
