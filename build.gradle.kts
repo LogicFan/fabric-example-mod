@@ -1,7 +1,10 @@
+import com.github.logicfan.gradle.shadow.transformers.JsonTransformer
+
 plugins {
 	id("fabric-loom") version "0.9.local"
 	id("maven-publish")
 	id("com.github.johnrengelman.shadow") version "7.0.0"
+	id("shadow.json-transformer") version "1.0.1"
 }
 
 val sourceCompatibility = JavaVersion.VERSION_16
@@ -71,6 +74,12 @@ tasks {
 
 	shadowJar {
 		archiveClassifier.set("universal-dev")
+
+		// merge mixin.json
+		val jsonTransformer = JsonTransformer()
+		jsonTransformer.resource = "fabric-example-mod-refmap.json"
+
+		transformers.add(jsonTransformer)
 
 		configurations = listOf()
 
