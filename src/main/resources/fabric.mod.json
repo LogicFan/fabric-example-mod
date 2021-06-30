@@ -23,7 +23,7 @@
     ]
   },
   "mixins": [
-    "m1.mixins.json",
+    "main.mixins.json",
     "m0.mixins.json"
   ],
 

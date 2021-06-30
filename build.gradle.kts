@@ -1,10 +1,6 @@
-import com.github.logicfan.gradle.shadow.transformers.JsonTransformer
-
 plugins {
 	id("fabric-loom") version "0.9.local"
 	id("maven-publish")
-	id("com.github.johnrengelman.shadow") version "7.0.0"
-	id("com.github.logicfan.gradle.shadow.json-transformer") version "1.0.1"
 }
 
 val sourceCompatibility = JavaVersion.VERSION_16
@@ -28,6 +24,11 @@ repositories {
 }
 
 val mixin by sourceSets.registering {
+	this.compileClasspath += sourceSets.main.get().compileClasspath
+	this.runtimeClasspath += sourceSets.main.get().runtimeClasspath
+}
+
+val mixin1 by sourceSets.registering {
 	this.compileClasspath += sourceSets.main.get().compileClasspath
 	this.runtimeClasspath += sourceSets.main.get().runtimeClasspath
 }
@@ -72,26 +73,30 @@ tasks {
 		}
 	}
 
-	shadowJar {
-		archiveClassifier.set("universal-dev")
-
-		// merge mixin.json
-		val jsonTransformer = JsonTransformer()
-		jsonTransformer.resource = loom.refmapName
-
-		transformers.add(jsonTransformer)
-
-		configurations = listOf()
-
-		from(sourceSets.main.map { it.output })
-		from(mixin.map { it.output})
+	val mixinJar by registering(Jar::class) {
+		archiveClassifier.set("mixin")
+		from(mixin.get().output)
 	}
 
-	remapJar {
-		dependsOn(shadowJar)
-		archiveClassifier.set("universal")
-		input.fileValue(shadowJar.get().outputs.files.singleFile)
+	val mixin1Jar by registering(Jar::class) {
+		archiveClassifier.set("mixin1")
+		from(mixin1.get().output)
 	}
+
+	assemble {
+		dependsOn(mixinJar)
+		dependsOn(mixin1Jar)
+	}
+}
+
+
+loom {
+	refmapName = "default-refmap0000.json"
+}
+
+mixin {
+	add(sourceSets.main.get(), "main-refmap0000.json")
+	add(mixin.get())
 }
 
 java {
