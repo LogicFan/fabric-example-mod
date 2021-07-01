@@ -83,7 +83,9 @@ shadowJar {
 
 	from(sourceSets["main"].output)
 	from(sourceSets["mixin"].output)
-	from(sourceSets["mixin1"].output)
+	from(sourceSets["mixin1"].output) {
+		exclude("m1_2.mixins.json")
+	}
 }
 
 remapJar {
