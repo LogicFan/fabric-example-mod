@@ -23,8 +23,6 @@
     ]
   },
   "mixins": [
-    "main.mixins.json",
-    "m0.mixins.json"
   ],
 
   "depends": {

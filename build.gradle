@@ -1,5 +1,6 @@
 plugins {
 	id 'fabric-loom' version '0.9.local'
+	id 'com.github.johnrengelman.shadow' version '7.0.0'
 	id 'maven-publish'
 }
 
@@ -67,12 +68,28 @@ java {
 }
 
 loom {
-	refmapName = "default-refmap0000.json"
+	refmapName = "refmap0000.json"
 }
 
 mixin {
-	add(sourceSets["main"], "main-refmap0000.json")
-	add(sourceSets["mixin"])
+	add(sourceSets["main"], "refmap0001.json")
+	add(sourceSets["mixin"], "refmap0002.json")
+	add(sourceSets["mixin1"], "refmap0003.json")
+}
+
+shadowJar {
+	archiveClassifier.set("universal-dev")
+	configurations = []
+
+	from(sourceSets["main"].output)
+	from(sourceSets["mixin"].output)
+	from(sourceSets["mixin1"].output)
+}
+
+remapJar {
+	dependsOn(shadowJar)
+	archiveClassifier.set("universal")
+	input.fileValue(tasks["shadowJar"].outputs.files.singleFile)
 }
 
 jar {
