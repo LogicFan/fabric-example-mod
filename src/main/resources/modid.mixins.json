@@ -6,7 +6,30 @@
   "mixins": [
   ],
   "client": [
-    "ExampleMixin"
+    "ExampleMixin",
+    "ExampleMixin2",
+    "ExampleMixin3",
+    "ExampleMixin4",
+    "ExampleMixin5",
+    "ExampleMixin6",
+    "ExampleMixin7",
+    "ExampleMixin8",
+    "ExampleMixin9",
+    "ExampleMixin10",
+    "ExampleMixin11",
+    "ExampleMixin12",
+    "ExampleMixin13",
+    "ExampleMixin14",
+    "ExampleMixin15",
+    "ExampleMixin16",
+    "ExampleMixin17",
+    "ExampleMixin18",
+    "ExampleMixin19",
+    "ExampleMixin20",
+    "ExampleMixin21",
+    "ExampleMixin22",
+    "ExampleMixin23",
+    "ExampleMixin24",
   ],
   "injectors": {
     "defaultRequire": 1
